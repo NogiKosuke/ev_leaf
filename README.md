@@ -14,13 +14,13 @@
 
 # Stick (中間)テーブル
 
-|  id  |  task_id(FK)  |  lavel_id(FK)  |
+|  id  |  task_id(FK)  |  label_id(FK)  |
 | ---- | ---- | ---- |
 |  integer  |  integer  |  integer  |
 
 
-# Lavelテーブル
+# Labelテーブル
 
-|  id  |  lvl_name  |
+|  id  |  lbl_name  |
 | ---- | ---- |
 |  integer  |  string  |
