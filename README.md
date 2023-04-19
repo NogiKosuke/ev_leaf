@@ -1,24 +1,26 @@
-# README
+# User テーブル
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+|  id  |  user_name  |  email  |  password_digest  |
+| ---- | ---- | ---- | ---- |
+|  integer  |  string  |  string  |  string  |
 
-Things you may want to cover:
 
-* Ruby version
+# Task テーブル
 
-* System dependencies
+|  id  |  user_id(FK)  |  title  |  content  |
+| ---- | ---- | ---- | ---- |
+|  integer  |  integer  |  string  |  text  |
 
-* Configuration
 
-* Database creation
+# Stick (中間)テーブル
 
-* Database initialization
+|  id  |  task_id(FK)  |  label_id(FK)  |
+| ---- | ---- | ---- |
+|  integer  |  integer  |  integer  |
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
+# Labelテーブル
 
-* Deployment instructions
-
-* ...
+|  id  |  lbl_name  |
+| ---- | ---- |
+|  integer  |  string  |
