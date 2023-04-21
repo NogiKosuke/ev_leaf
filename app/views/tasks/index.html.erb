@@ -8,7 +8,7 @@
   </tr>
 
 <% @tasks.each do |task| %>
-  <tr>
+  <tr class = 'task_row'>
     <td><%= task.title %></td>
     <td><%= task.content %></td>
     <td><%= task.created_at.to_s(:datetime_jp) %></td>
@@ -19,3 +19,4 @@
 <% end %>
 </table>
 <%= link_to 'タスクを新しく作る', new_task_path %>
+<%= t('view.sample') %>
