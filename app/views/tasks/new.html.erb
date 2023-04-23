@@ -23,5 +23,9 @@
     <%= form.label :content %><br>
     <%= form.text_area :content %>
   </div>
+  <div class="task_status">
+    <%= form.label :status %><br>
+    <%= form.select :status,[["未着手", "未着手"], ["実行中", "実行中"]] %>
+  </div>
   <%= form.submit "登録する" %>
 <% end %>
