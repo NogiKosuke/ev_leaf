@@ -27,5 +27,9 @@
     <%= form.label :status %><br>
     <%= form.select :status,[["未着手", "未着手"], ["実行中", "実行中"]] %>
   </div>
+  <div class="task_priority">
+    <%= form.label :priority %><br>
+    <%= form.select :priority,[["高", "高"], ["中","中"], ["低", "低"]] %>
+  </div>
   <%= form.submit "登録する" %>
 <% end %>

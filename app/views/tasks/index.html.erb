@@ -2,7 +2,17 @@
 <br>
 <br>
 <%= link_to "終了期限でソートする", tasks_path(sort_expired: "true") %>
+<%= link_to "優先順位でソートする", tasks_path(sort_priority: "true") %>
+<br>
 
+  <%= form_with(scope: :task, url: tasks_path,local: true, method: :get) do |f| %>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+    <%= f.label :status %>
+    <%= f.select :status,[["全て", ""],["未着手", "未着手"], ["実行中", "実行中"], ["完了", "完了"]] %>
+    <%= f.submit "検索する" %>
+  <% end %>
+  
 <table>
   <tr>
     <th>タスク</th>
@@ -10,6 +20,8 @@
     <th>作成日時</th>
     <th>終了期限</th>
     <th>状態</th>
+    <th>優先度</th>
+    <th colspan="6"></th>
   </tr>
 
 <% @tasks.each do |task| %>
@@ -19,11 +31,12 @@
     <td><%= task.created_at.to_s(:datetime_jp) %></td>
     <td><%= task.expired_at.to_s(:datetime_jp) %></td>
     <td><%= task.status %></td>
+    <td><%= task.priority%></td>
     <td><%= link_to '詳細', task_path(task.id) %></td>
     <td><%= link_to '編集', edit_task_path(task.id) %></td>
     <td><%= link_to '削除', task_path(task.id), method: :delete, data: {confirm: '本当に削除しますか？'} %></td>
   </tr>
 <% end %>
 </table>
-<%= link_to 'タスクを新しく作る', new_task_path %>
-<%= t('view.sample') %>
+<%= link_to 'タスクを新しく作る', new_task_path %><br>
+<%= link_to '一覧へ戻る', tasks_path %>

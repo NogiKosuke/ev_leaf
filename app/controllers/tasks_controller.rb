@@ -1,9 +1,24 @@
 class TasksController < ApplicationController
   def index
-    if params[:sort_expired]
-      @tasks = Task.all.order(expired_at: :asc)
+    if params[:task].present?
+      title = params[:task][:title]
+      status = params[:task][:status]
+      if title.present? && (status != "")
+        @tasks = Task.title_like(title).status_where(status)
+      elsif title.present? && (status == "")
+        @tasks = Task.title_like(title)
+      elsif title.blank? && (status != "")
+        @tasks = Task.status_where(status)
+      end
+
     else
-      @tasks = Task.all.order(created_at: :desc)
+      if params[:sort_expired].present?
+        @tasks = Task.all.order(expired_at: :asc)
+      elsif params[:sort_priority].present?
+        @tasks = Task.all.order(priority: :asc)
+      else
+        @tasks = Task.all.order(created_at: :desc)
+      end
     end
   end
   
@@ -48,6 +63,6 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :content, :expired_at, :status)
+    params.require(:task).permit(:title, :content, :expired_at, :status, :priority)
   end
 end
