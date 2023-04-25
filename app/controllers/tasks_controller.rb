@@ -12,7 +12,6 @@ class TasksController < ApplicationController
       else
         redirect_to tasks_path
       end
-
     else
       if params[:sort_expired].present?
         @tasks = Task.all.order(expired_at: :asc).page(params[:page]).per(15)
