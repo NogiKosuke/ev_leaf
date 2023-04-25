@@ -4,20 +4,22 @@ class TasksController < ApplicationController
       title = params[:task][:title]
       status = params[:task][:status]
       if title.present? && (status != "")
-        @tasks = Task.title_like(title).status_where(status)
+        @tasks = Task.title_like(title).status_where(status).page(params[:page]).per(15)
       elsif title.present? && (status == "")
-        @tasks = Task.title_like(title)
+        @tasks = Task.title_like(title).page(params[:page]).per(15)
       elsif title.blank? && (status != "")
-        @tasks = Task.status_where(status)
+        @tasks = Task.status_where(status).page(params[:page]).per(15)
+      else
+        redirect_to tasks_path
       end
 
     else
       if params[:sort_expired].present?
-        @tasks = Task.all.order(expired_at: :asc)
+        @tasks = Task.all.order(expired_at: :asc).page(params[:page]).per(15)
       elsif params[:sort_priority].present?
-        @tasks = Task.all.order(priority: :asc)
+        @tasks = Task.all.order(priority: :asc).page(params[:page]).per(15)
       else
-        @tasks = Task.all.order(created_at: :desc)
+        @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(15)
       end
     end
   end
