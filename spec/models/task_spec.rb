@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Task, type: :model do
   describe 'バリデーションのテスト' do
     context 'タスクのタイトルが空の場合' do
-      it 'バリデーションにひっかる' do
+      it 'バリデーションにひっかかる' do
         task = Task.new(title: '', content: '失敗テスト', expired_at: "#{3.day.from_now}")
         expect(task).not_to be_valid
       end
