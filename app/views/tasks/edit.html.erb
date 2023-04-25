@@ -15,9 +15,21 @@
     <%= form.label :title %><br>
     <%= form.text_field :title %>
   </div>
+  <div class="task_expired_at">
+  <%= form.label :expired_at %><br>
+  <%= form.datetime_field :expired_at %>
+  </div>
   <div class="task_content">
     <%= form.label :content %><br>
     <%= form.text_area :content %>
   </div>
-  <%= form.submit %>
+  <div class="task_status">
+    <%= form.label :status %><br>
+    <%= form.select :status,[["未着手", "未着手"], ["実行中", "実行中"], ["完了", "完了"]] %>
+  </div>
+  <div class="task_priority">
+    <%= form.label :priority %><br>
+    <%= form.select :priority,[["高", "高"], ["中","中"], ["低", "低"]] %>
+  </div>
+  <%= form.submit "登録する" %>
 <% end %>
