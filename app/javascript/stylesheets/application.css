@@ -68,6 +68,10 @@ table, td, th {
   border-bottom: 1px solid grey;
 }
 
+.center{
+  text-align: center;
+}
+
 .clearfix:after {
   content: "";
   display: block;

@@ -49,7 +49,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
     end
     context '終了期限でソートするをクリックした場合' do
-      it '終了期限が一番遠いものが近い順に表示される' do
+      it '終了期限が近い順に表示される' do
         click_on '終了期限▼'
         sleep 1
         task_list = all('.task_row') 
@@ -59,7 +59,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
     end
     context '優先順位でソートするをクリックした場合' do
-      it '終了期限が一番遠いものが近い順に表示される' do
+      it '優先度が高い順に表示される' do
         click_on '優先度▼'
         sleep 1
         task_list = all('.task_row') 
