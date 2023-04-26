@@ -26,6 +26,10 @@
     <%= form.label :password_confirmation %><br>
     <%= form.password_field :password_confirmation %>
   </div>
+  <div class="user_admin"><br>
+    <%= form.label :admin %>
+    <%= form.check_box :admin, :as => :boolean %>
+  </div>
   <%= form.submit "登録する" %>
   <div>
   <% end %>

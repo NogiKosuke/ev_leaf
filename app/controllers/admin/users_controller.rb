@@ -1,4 +1,6 @@
 class Admin::UsersController < ApplicationController
+  before_action :require_admin
+
   def index
     @users = User.all.includes(:tasks)
   end
@@ -35,7 +37,7 @@ class Admin::UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    flash[:danger] = 'ユーザーを削除しました'
+    flash[:notice] = 'ユーザーを削除しました'
     redirect_to admin_users_path
   end
 
@@ -43,6 +45,14 @@ class Admin::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name,:email,:password,
-                                              :password_confirmation)
+                                              :password_confirmation,
+                                              :admin)
+  end
+
+  def require_admin
+    unless current_user.admin?
+      flash[:danger] = '権限がありません'
+      redirect_to root_url 
+    end
   end
 end

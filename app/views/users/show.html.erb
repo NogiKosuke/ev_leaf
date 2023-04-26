@@ -9,7 +9,7 @@
 <br>
 <% if @user.tasks.present? %>
   <h3>登録タスク</h3>
-  <table class="table table-striped">
+  <table>
   <tr>
     <th class = "mycolumn">タスク</th>
     <th class = "mycolumn_content">内容</th>
@@ -17,21 +17,17 @@
     <th class = "mycolumn_time"><%= link_to "終了期限▼", tasks_path(sort_expired: "true") %></th>
     <th class = "mycolumn_status">状態</th>
     <th class = "mycolumn_priority"><%= link_to "優先度▼", tasks_path(sort_priority: "true") %></th>
-    <th colspan="6"></th>
   </tr>
   
   <div class = 'content'>
   <% @user.tasks.each do |task| %>
     <tr class = 'task_row'>
       <td><%= task.title.truncate(14) %></td>
-      <td><%= task.content.truncate(17) %></td>
+      <td><%= task.content %></td>
       <td><%= task.created_at.to_s(:datetime_jp) %></td>
       <td><%= task.expired_at.to_s(:datetime_jp) %></td>
       <td><%= task.status %></td>
       <td class ='center'><%= task.priority%></td>
-      <td><%= link_to '詳細', task_path(task.id), class: "btn btn-info" %></td>
-      <td><%= link_to '編集', edit_task_path(task.id), class: "btn btn-success" %></td>
-      <td><%= link_to '削除', task_path(task.id), method: :delete, data: {confirm: '本当に削除しますか？'}, class: "btn btn-danger" %></td>
     </tr>
   <% end %>
   </div>

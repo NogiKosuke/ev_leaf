@@ -15,9 +15,21 @@
     <%= form.text_field :name %>
   </div>
   <div class="user_email">
-  <%= form.label :email %><br>
-  <%= form.email_field :email %>
+    <%= form.label :email %><br>
+    <%= form.email_field :email %>
   </div>
-  <%= form.submit "登録する" %>
+  <div class="user_password">
+    <%= form.label :password %><br>
+    <%= form.password_field :password %>
+  </div>
+  <div class="user_password_confirmation">
+    <%= form.label :password_confirmation %><br>
+    <%= form.password_field :password_confirmation %>
+  </div>
+  <div class="user_admin">
+    <%= form.label :admin %><br>
+    <%= form.check_box :admin, :as => :boolean %>
+  </div>
+  <%= form.submit "変更する" %>
   <div>
   <% end %>
