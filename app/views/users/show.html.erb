@@ -11,6 +11,7 @@
   <h3>登録タスク</h3>
   <table>
   <tr>
+    <th class = "mycolumn">作成者</th>
     <th class = "mycolumn">タスク</th>
     <th class = "mycolumn_content">内容</th>
     <th class = "mycolumn_time">作成日時</th>
@@ -22,6 +23,7 @@
   <div class = 'content'>
   <% @user.tasks.each do |task| %>
     <tr class = 'task_row'>
+      <td><%= @user.name %></td>
       <td><%= task.title.truncate(14) %></td>
       <td><%= task.content %></td>
       <td><%= task.created_at.to_s(:datetime_jp) %></td>
