@@ -14,12 +14,16 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       redirect_to tasks_path
+    else
+      render :new
     end
   end
 
   def show
     @user = User.find(params[:id])
-    return redirect_to tasks_path if current_user.id != @user.id
+    unless params[:admin].present?
+      return redirect_to tasks_path if current_user.id != @user.id
+    end
   end
 
   private
