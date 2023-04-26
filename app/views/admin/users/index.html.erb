@@ -1,0 +1,21 @@
+<h1>ユーザ管理画面</h1>
+<br>
+<%= link_to '新規作成',new_admin_user_path %>
+<br>
+<table>
+    <tr>
+      <th class>ID</th>
+      <th class>名前</th>
+      <th class>メールアドレス</th>
+      <th class>登録タスク数</th>
+    </tr>
+  
+    <% @users.each do |user| %>
+      <tr class = 'user_row'>
+        <td><%= user.id%></td>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.tasks.count %>個</td>
+      </tr>
+    <% end %>
+  </table>
