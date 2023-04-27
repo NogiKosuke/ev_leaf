@@ -3,14 +3,27 @@ class TasksController < ApplicationController
     if params[:task].present?
       title = params[:task][:title]
       status = params[:task][:status]
-      if title.present? && (status != "")
-        @tasks = current_user.tasks.title_like(title).status_where(status).page(params[:page]).per(15)
-      elsif title.present? && (status == "")
-        @tasks = current_user.tasks.title_like(title).page(params[:page]).per(15)
-      elsif title.blank? && (status != "")
-        @tasks = current_user.tasks.status_where(status).page(params[:page]).per(15)
+      label = params[:task][:label_id]
+      if label.present?
+        if title.present? && (status != "")
+          @tasks = current_user.tasks.title_like(title).status_where(status).where(id: Label.find(label).tasks.pluck(:id)).page(params[:page]).per(15)
+        elsif title.present? && (status == "")
+          @tasks = current_user.tasks.title_like(title).where(id: Label.find(label).tasks.pluck(:id)).page(params[:page]).per(15)
+        elsif title.blank? && (status != "")
+          @tasks = current_user.tasks.status_where(status).where(id: Label.find(label).tasks.pluck(:id)).page(params[:page]).per(15)
+        else
+          @tasks = current_user.tasks.where(id: Label.find(label).tasks.pluck(:id)).page(params[:page]).per(15)
+        end
       else
-        redirect_to tasks_path
+        if title.present? && (status != "")
+          @tasks = current_user.tasks.title_like(title).status_where(status).page(params[:page]).per(15)
+        elsif title.present? && (status == "")
+          @tasks = current_user.tasks.title_like(title).page(params[:page]).per(15)
+        elsif title.blank? && (status != "")
+          @tasks = current_user.tasks.status_where(status).page(params[:page]).per(15)
+        else
+          redirect_to tasks_path
+        end
       end
     else
       if params[:sort_expired].present?
@@ -64,6 +77,6 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :content, :expired_at, :status, :priority)
+    params.require(:task).permit(:title, :content, :expired_at, :status, :priority, label_ids: [])
   end
 end

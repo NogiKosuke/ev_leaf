@@ -21,7 +21,13 @@ li {
 
 .status_form {
   font-size: 20px;
-  padding-left: 10px;
+  padding-left: 20px;
+  float: left;
+}
+
+.label_form {
+  font-size: 20px;
+  padding-left: 20px;
   float: left;
 }
 

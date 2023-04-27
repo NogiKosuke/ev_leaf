@@ -3,5 +3,13 @@
 <br>
 
 <p>タイトル:<%= @task.title %></p>
+<% if @task.labels.present? %>
+  <p>ラベル:
+    <% @task.labels.each do |lbl| %>
+      <%= lbl.lbl_name %>　
+    <% end %>
+  </p>
+<% end %>
 <br>
 <p>内容:<%= @task.content %></p>
+<p>状態:<%= @task.status %></p>

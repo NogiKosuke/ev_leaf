@@ -6,4 +6,6 @@ class Task < ApplicationRecord
   scope :status_where, -> (status){ where('status like ?', "#{status}") }
   enum priority: { '高': 0, '中': 1 , '低': 2 }
   belongs_to :user
+  has_many :sticks, dependent: :destroy
+  has_many :labels, through: :sticks
 end
