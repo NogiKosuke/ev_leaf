@@ -1,24 +1,19 @@
 require 'rails_helper'
 RSpec.describe 'タスク管理機能', type: :system do
-  let!(:task) { FactoryBot.create(:task, title: 'task', status: '実行中', priority: '高') }
+  let!(:task) { FactoryBot.create(:task, title: 'task', status: '実行中', priority: '高', user: user) }
+  let!(:user) { FactoryBot.create(:user) }
+  let!(:second_user) { FactoryBot.create(:second_user) }
   describe '新規作成機能' do
     context 'タスクを新規作成した場合' do
       it '作成したタスクが表示される' do
-        # 1. new_task_pathに遷移する（新規作成ページに遷移する）
-        # ここにnew_task_pathにvisitする処理を書く
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
         visit new_task_path
-        # 2. 新規登録内容を入力する
-        #「タスク名」というラベル名の入力欄と、「タスク詳細」というラベル名の入力欄にタスクのタイトルと内容をそれぞれ入力する
-        # ここに「タスク名」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
         fill_in "task_title", with: 'mytask'
-        # ここに「タスク詳細」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
         fill_in "task_content", with: 'mycontent'
-        # 3. 「登録する」というvalue（表記文字）のあるボタンをクリックする
-        # ここに「登録する」というvalue（表記文字）のあるボタンをclick_onする（クリックする）する処理を書く
         click_on '登録する'
-        # 4. clickで登録されたはずの情報が、タスク詳細ページに表示されているかを確認する
-        # （タスクが登録されたらタスク詳細画面に遷移されるという前提）
-        # ここにタスク詳細ページに、テストコードで作成したデータがタスク詳細画面にhave_contentされているか（含まれているか）を確認（期待）するコードを書く
         expect(page).to have_content 'mytask'
       end
     end
@@ -26,10 +21,13 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe '一覧表示機能' do
     before do
-      FactoryBot.create(:second_task, title: 'task2', priority: '中')
-      FactoryBot.create(:third_task, title: 'task3',priority: '低')
+      FactoryBot.create(:second_task, title: 'task2', priority: '中', user: user)
+      FactoryBot.create(:third_task, title: 'task3',priority: '低', user: user)
+      visit root_path
+      fill_in 'Email', with: 'aaa@aaa.aaa'
+      fill_in 'Password', with: 'password'
+      click_on 'Log in'
       # 「一覧画面に遷移した場合」や「タスクが作成日時の降順に並んでいる場合」など、contextが実行されるタイミングで、before内のコードが実行される
-      visit tasks_path
     end
     
     context '一覧画面に遷移した場合' do
@@ -72,9 +70,12 @@ RSpec.describe 'タスク管理機能', type: :system do
 
   describe 'ページ遷移機能' do
     before do
-      14.times { FactoryBot.create(:task) }
-      FactoryBot.create(:second_task, title: 'task22')
-      visit tasks_path
+      14.times { FactoryBot.create(:task, user: user) }
+      FactoryBot.create(:second_task, title: 'task22', user: user)
+      visit root_path
+      fill_in 'Email', with: 'aaa@aaa.aaa'
+      fill_in 'Password', with: 'password'
+      click_on 'Log in'
     end
     context 'taskテーブルのレコードが16個以上ある場合' do
       it '２ページ目に遷移する' do
@@ -87,6 +88,10 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '詳細表示機能' do
     context '任意のタスク詳細画面に遷移した場合' do
       it '該当タスクの内容が表示される' do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
         visit tasks_path
         click_on '詳細'
         expect(page).to have_content 'task'
@@ -97,8 +102,12 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '検索機能' do
     before do
       # 必要に応じて、テストデータの内容を変更して構わない
-      FactoryBot.create(:second_task, title: "task2", status: "未着手")
-      FactoryBot.create(:third_task, title: "task2", status: "実行中")
+      FactoryBot.create(:second_task, title: "task2", status: "未着手", user: user)
+      FactoryBot.create(:third_task, title: "task2", status: "実行中", user: user)
+      visit root_path
+      fill_in 'Email', with: 'aaa@aaa.aaa'
+      fill_in 'Password', with: 'password'
+      click_on 'Log in'
     end
 
     context 'タイトルであいまい検索をした場合' do
@@ -130,6 +139,116 @@ RSpec.describe 'タスク管理機能', type: :system do
         task_list = all('.task_row').first
         expect(task_list).to have_content '実行中'
       end
+    end
+  end
+  describe 'ユーザー登録のテスト' do
+    context 'ログインせずにタスク一覧画面に飛ぼうとした場合' do
+      it 'ログイン画面に遷移する' do
+        visit tasks_path
+        expect(page).to have_content 'ログインをして下さい'
+      end
+    end
+    context 'ユーザーを新規登録できること' do
+      it "新規登録を行うと一覧画面に遷移し、登録された名前が表示される" do
+        visit root_path
+        click_on '新規登録'
+        fill_in 'user_name', with: 'alice'
+        fill_in 'user_email', with: 'test@test.test'
+        fill_in 'user_password', with: 'password'
+        fill_in 'user_password_confirmation', with: 'password'
+        click_on '登録する'
+        expect(page).to have_content 'aliceさんようこそ'
+      end
+    end
+  end
+  
+  describe 'セッション機能のテスト' do
+    context 'ログインができること' do
+      it 'ログイン情報を入力してログインボタンを押したらタスク一覧画面に遷移する' do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
+        expect(page).to have_content 'タスク一覧'
+      end
+    end
+    context 'ログインしてマイページをクリックした場合' do
+      it "自分の詳細画面(マイページ)飛べる" do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
+        click_on 'マイページ'
+        expect(page).to have_content 'userさんのページ'
+      end
+    end
+    context '一般ユーザが他人の詳細画面に飛んだ場合' do
+      it "タスク一覧画面に遷移する" do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
+        visit  user_path(second_user.id)
+        expect(page).to have_content 'タスク一覧'
+      end
+    end
+    context 'ログアウトボタンをクリックした場合' do
+      it "ログアウトできること" do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
+        click_on 'ログアウト'
+        expect(page).to have_content 'ログアウトしました'
+      end
+    end
+  end
+  describe '管理画面のテスト' do
+    context '管理ユーザでログインした場合' do
+      before do
+        visit root_path
+        fill_in 'Email', with: 'aaa@aaa.aaa'
+        fill_in 'Password', with: 'password'
+        click_on 'Log in'
+      end
+        it '管理画面にアクセスできる' do
+          click_on 'ユーザー一覧'
+          expect(page).to have_content 'ユーザー管理画面'
+        end
+        it 'ユーザの新規登録ができる' do
+          click_on 'ユーザー一覧'
+          click_on '新規作成'
+          fill_in 'user_name', with: 'bob'
+          fill_in 'user_email', with: 'bob@bob.bob'
+          fill_in 'user_password', with: 'password'
+          fill_in 'user_password_confirmation', with: 'password'
+          check 'Admin'
+          click_on '登録する'
+          expect(page).to have_content 'bob'
+        end
+        it 'ユーザの詳細画面にアクセスできる' do
+          click_on 'ユーザー一覧'
+          user_list = all('.user_row')
+          user_list[1].click_on 'マイページ'
+          expect(page).to have_content 'aliceさんのページ'
+        end
+        it 'ユーザの編集画面からユーザを編集できる' do
+          click_on 'ユーザー一覧'
+          user_list = all('.user_row')
+          user_list[1].click_on '編集'
+          fill_in 'user_name', with: 'other_person'
+          fill_in 'user_password', with: 'password'
+          fill_in 'user_password_confirmation', with: 'password'
+          click_on '変更する'
+          expect(page).to have_content 'other_person'
+        end
+        it 'ユーザの削除をできる' do
+          click_on 'ユーザー一覧'
+          user_list = all('.user_row')
+          user_list[1].click_on '削除'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).not_to have_content 'alice'
+        end
     end
   end
 end

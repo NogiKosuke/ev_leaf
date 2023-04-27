@@ -1,4 +1,4 @@
-<br>
+<p>〜<%= "#{current_user.name}" %>さんようこそ！！〜</p>
 <div class = "wrapper">
   <h1>To Do List</h1>
   <br>
@@ -21,11 +21,12 @@
   <% end %>
   <br>
   <br>
-  <%= link_to '新規作成', new_task_path, class: "btn btn-primary" %>
+  <%= link_to '新規作成', new_task_path, class: "btn btn-primary btn-lg" %>
   <br>
   <br>
   <table class="table table-striped">
     <tr>
+      <th class = >作成者</th>
       <th class = "mycolumn">タスク</th>
       <th class = "mycolumn_content">内容</th>
       <th class = "mycolumn_time">作成日時</th>
@@ -38,6 +39,7 @@
   <div class = 'content'>
     <% @tasks.each do |task| %>
       <tr class = 'task_row'>
+        <td><%= current_user.name %></td>
         <td><%= task.title.truncate(14) %></td>
         <td><%= task.content.truncate(17) %></td>
         <td><%= task.created_at.to_s(:datetime_jp) %></td>

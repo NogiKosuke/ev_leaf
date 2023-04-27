@@ -15,14 +15,25 @@
   <body>
     <header class = 'header'>
     <ul class = "clearfix">
-          <li class = "header_menu"><%= link_to 'タスク一覧', tasks_path, class: :link %></li>
-          <li class = "header_menu"><%= link_to '新規作成', new_task_path, class: :link %></li>
+          <% if logged_in? %>
+            <% if current_user.admin? %>
+              <li class = "header_menu"><%= link_to 'ユーザー一覧', admin_users_path, class: :link %></li>
+            <% end %>
+            <li class = "header_menu"><%= link_to 'タスク一覧', tasks_path, class: :link %></li>
+            <li class = "header_menu"><%= link_to 'タスク作成', new_task_path, class: :link %></li>
+            <li class = "header_menu"><%= link_to 'ログアウト', session_path(current_user.id), method: :delete, class: :link %></li>
+            <li class = "header_menu"><%= link_to 'マイページ', user_path(current_user.id), class: :link %></li>
+          <% else %>
+            <li class = "header_menu"><%= link_to '新規登録', new_user_path, class: :link %></li>
+            <li class = "header_menu"><%= link_to 'ログイン', new_session_path, class: :link %></li>
+          <% end %>
     </ul>
     </header>
     <br>
     <% flash.each do |key, value| %>
       <%= content_tag(:div, value, class: "#{key}") %>
     <% end %>
+    <br>
     <%= yield %>
     <footer class = 'myfooter'>
     </footer>
