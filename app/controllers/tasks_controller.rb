@@ -3,22 +3,35 @@ class TasksController < ApplicationController
     if params[:task].present?
       title = params[:task][:title]
       status = params[:task][:status]
-      if title.present? && (status != "")
-        @tasks = current_user.tasks.title_like(title).status_where(status).page(params[:page]).per(15)
-      elsif title.present? && (status == "")
-        @tasks = current_user.tasks.title_like(title).page(params[:page]).per(15)
-      elsif title.blank? && (status != "")
-        @tasks = current_user.tasks.status_where(status).page(params[:page]).per(15)
+      label = params[:task][:label_id]
+      if label.present?
+        if title.present? && (status != "")
+          @tasks = current_user.tasks.title_like_and_status_where(title, status).tasks_label_where(label).paginate(params)
+        elsif title.present? && (status == "")
+          @tasks = current_user.tasks.title_like(title).tasks_label_where(label).paginate(params)
+        elsif title.blank? && (status != "")
+          @tasks = current_user.tasks.status_where(status).tasks_label_where(label).paginate(params)
+        else
+          @tasks = current_user.tasks.tasks_label_where(label).paginate(params)
+        end
       else
-        redirect_to tasks_path
+        if title.present? && (status != "")
+          @tasks = current_user.tasks.title_like_and_status_where(title, status).paginate(params)
+        elsif title.present? && (status == "")
+          @tasks = current_user.tasks.title_like(title).paginate(params)
+        elsif title.blank? && (status != "")
+          @tasks = current_user.tasks.status_where(status).paginate(params)
+        else
+          redirect_to tasks_path
+        end
       end
     else
       if params[:sort_expired].present?
-        @tasks = current_user.tasks.order(expired_at: :asc).page(params[:page]).per(15)
+        @tasks = current_user.tasks.sort_limit.paginate(params)
       elsif params[:sort_priority].present?
-        @tasks = current_user.tasks.order(priority: :asc).page(params[:page]).per(15)
+        @tasks = current_user.tasks.sort_priority.paginate(params)
       else
-        @tasks = current_user.tasks.order(created_at: :desc).page(params[:page]).per(15)
+        @tasks = current_user.tasks.latest.paginate(params)
       end
     end
   end
@@ -64,6 +77,6 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :content, :expired_at, :status, :priority)
+    params.require(:task).permit(:title, :content, :expired_at, :status, :priority, label_ids: [])
   end
 end

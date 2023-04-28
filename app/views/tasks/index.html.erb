@@ -14,6 +14,10 @@
       <%= f.label :status %>
       <%= f.select :status,[["全て", ""],["未着手", "未着手"], ["実行中", "実行中"], ["完了", "完了"]] %>
     </div>
+    <div class = "label_form">
+    <%= f.label :label %>
+      <%= f.select :label_id, Label.all.collect { |p| [ p.lbl_name, p.id ] }, include_blank: true %>
+    </div>
     <div class = "srh_form">
       <%= f.submit "検索する", class: "btn btn-secondary btn-sm" %>
     </div>

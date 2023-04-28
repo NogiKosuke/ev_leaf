@@ -7,6 +7,11 @@ FactoryBot.define do
     expired_at{ 3.day.from_now }
     status { '未着手' }
     priority{ '低' }
+
+    after(:build) do |task|
+      label = create(:label)
+      task.sticks << build(:stick, task: task, label: label )
+    end
   end
 
   factory :second_task, class: Task do
