@@ -3,6 +3,7 @@ class Admin::UsersController < ApplicationController
 
   def index
     @users = User.all.includes(:tasks)
+    @ii = 'yatta'
   end
 
   def new
@@ -36,9 +37,13 @@ class Admin::UsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-    @user.destroy
+    if  @user.destroy
     flash[:notice] = 'ユーザーを削除しました'
     redirect_to admin_users_path
+    else
+    flash[:notice] = 'ユーザーを削除できませんでした。管理ユーザーを０人にすることはできません'
+    redirect_to admin_users_path
+    end
   end
 
   private
