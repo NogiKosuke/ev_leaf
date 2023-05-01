@@ -1,16 +1,14 @@
-5.times do |n|
-  name = Faker::Games::Pokemon.name
-  email = Faker::Internet.email
-  password = "password"
+  name = '管理者'
+  email = 
+  password = 
   admin = true
   User.create!(name: name,
                email: email,
                password: password,
                admin: admin
                )
-end
 
-5.times do |n|
+9.times do |n|
   name = Faker::Games::Pokemon.name
   email = Faker::Internet.email
   password = "password"
