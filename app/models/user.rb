@@ -13,14 +13,14 @@ class User < ApplicationRecord
 
   def admin_destroy_check
     number = User.all.where(admin: true).count
-    if ( number - 1 == 0) && (self.admin == true)
+    if ( number == 0) && (self.admin == true)
       throw(:abort)
     end
   end
 
   def admin_edit_check
     number = User.all.where(admin: true).count
-    if number == 2
+    if number == 0
       errors.add(:base, '管理ユーザーを０人にすることはできません')
       raise ActiveRecord::Rollback 
     end
