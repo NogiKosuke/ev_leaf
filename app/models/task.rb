@@ -2,10 +2,18 @@ class Task < ApplicationRecord
   validates :title, presence: true, length: { maximum: 30 }
   validates :content, presence: true
   validates :expired_at, presence: true
-  scope :title_like, -> (title){ where('title like ?', "%#{title}%") }
-  scope :status_where, -> (status){ where('status like ?', "#{status}") }
-  scope :tasks_label_where, -> (label){ where(id: Label.find(label).tasks.pluck(:id)) }
-  scope :title_like_and_status_where, -> (title, status){ title_like(title).status_where(status) }
+  scope :title_like, -> (title){
+    return  if title.blank?
+    where('title like ?', "%#{title}%") 
+  }
+  scope :status_where, -> (status){
+    return if status.blank?
+    where('status like ?', "#{status}") 
+  }
+  scope :tasks_label_where, -> (label_id){ 
+    return if label_id.blank?
+    where(id: Stick.where(label_id: label_id).select(:task_id)) 
+  }
   scope :paginate, ->(p) { page(p[:page]).per(15) }
   scope :latest, -> { order(created_at: :desc) }
   scope :sort_limit, -> { order(expired_at: :asc) }

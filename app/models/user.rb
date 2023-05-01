@@ -20,7 +20,7 @@ class User < ApplicationRecord
 
   def admin_edit_check
     number = User.all.where(admin: true).count
-    if  number  == 0
+    if number == 2
       errors.add(:base, '管理ユーザーを０人にすることはできません')
       raise ActiveRecord::Rollback 
     end
